@@ -6,24 +6,10 @@ using System.Web;
 
 namespace cBankWebApi.Providers
 {
-    public class ProductCatalog
+    public class ProductCatalog : IProductCatalog
     {
-        private static ProductCatalog _productCatalog;
-
-        public static ProductCatalog Instance
-        {
-            get
-            {
-                if (_productCatalog == null)
-                {
-                    _productCatalog = new ProductCatalog();
-                    InitData();
-                }
-                return _productCatalog;
-            }
-        }
-
-        public Dictionary<string, List<Product>> CompanyProducts { get; set; }
+       
+        private Dictionary<string, List<Product>> CompanyProducts { get; set; }
 
 
         public List<Product> GetProductsForCompany(string beaconId)
@@ -31,9 +17,14 @@ namespace cBankWebApi.Providers
             return CompanyProducts["1"];
         }
 
-        private static void InitData()
+        public Product GetProduct(string companyId, int productId)
         {
-            _productCatalog.CompanyProducts = new Dictionary<string, List<Product>>();
+            return GetProductsForCompany("1").FirstOrDefault(s => s.Id == productId);
+        }
+
+        public static void InitData(ProductCatalog productCatalog)
+        {
+            productCatalog.CompanyProducts = new Dictionary<string, List<Product>>();
 
 
             var products = new List<Product>();
@@ -51,10 +42,10 @@ namespace cBankWebApi.Providers
                     Name = "Esspresso",
                     Price = 6
                 });
-            _productCatalog.CompanyProducts.Add("1", products);
+            productCatalog.CompanyProducts.Add("1", products);
         }
 
-        private ProductCatalog()
+        public ProductCatalog()
         {
 
         }

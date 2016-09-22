@@ -11,9 +11,15 @@ namespace cBankWebApi.Controllers
 {
     public class GetSuggestionsController : ApiController
     {
+        private readonly IProductCatalog _catalog;
+
+        public GetSuggestionsController(IProductCatalog catalog)
+        {
+            _catalog = catalog;
+        }
         public List<Product> Get([FromUri]string beaconId)
         {
-            return ProductCatalog.Instance.GetProductsForCompany(beaconId);
+            return _catalog.GetProductsForCompany(beaconId);
         }
     }
 }
