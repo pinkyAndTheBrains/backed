@@ -19,10 +19,13 @@ namespace cBankWebApi
             var productCatalog = new ProductCatalog();
             ProductCatalog.InitData(productCatalog);
             container.RegisterInstance<IProductCatalog>(productCatalog);
-            
-            
+
+            var transactionSystem = new TransactionCollection();
+            container.RegisterInstance<ITransactionSystem>(transactionSystem);
+
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
-            GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = 
+                new Unity.WebApi.UnityDependencyResolver(container);
 
         }
     }

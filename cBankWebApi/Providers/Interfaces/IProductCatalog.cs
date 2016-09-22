@@ -7,6 +7,6 @@ namespace cBankWebApi.Providers.Interfaces
     {
        
         List<Product> GetProductsForCompany(string beaconId);
-        Product GetProduct(string s, int productId);
+        Product GetProduct(string beaconId, int productId);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace cBankWebApi.Providers.Interfaces
 {
-    interface ITransactionSystem
+    public interface ITransactionSystem
     {
         string RegisterTransaction(Product product);
         void AuthTransaction(TransactionAuth transactionAuthData);

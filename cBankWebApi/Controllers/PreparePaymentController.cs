@@ -8,17 +8,19 @@ namespace cBankWebApi.Controllers
 {
     public class PreparePaymentController : ApiController
     {
+        private readonly ITransactionSystem _transactionSystem;
         private readonly IProductCatalog _productCatalog;
 
-        public PreparePaymentController(IProductCatalog productCatalog)
+        public PreparePaymentController(ITransactionSystem transactionSystem, IProductCatalog productCatalog)
         {
+            _transactionSystem = transactionSystem;
             _productCatalog = productCatalog;
         }
-        public string Get([FromUri]int ProductId)
+        public string Get([FromUri]int productId)
         {
-            var product = _productCatalog.GetProduct("1", ProductId);
+            var product = _productCatalog.GetProduct("1", productId);
             //.GetProductsForCompany("1").FirstOrDefault(s=>s.Id == ProductId);
-            var transactionId = TransactionCollection.Instance.RegisterTransaction(product);
+            var transactionId = _transactionSystem.RegisterTransaction(product);
 
             return transactionId;
         }

@@ -14,7 +14,7 @@ namespace cBankWebApi.Providers
             return CompanyProducts["1"];
         }
 
-        public Product GetProduct(string companyId, int productId)
+        public Product GetProduct(string beaconId, int productId)
         {
             return GetProductsForCompany("1").FirstOrDefault(s => s.Id == productId);
         }

@@ -6,21 +6,26 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using cBankWebApi.Providers.Interfaces;
 using cBankWebApi.Push;
 
 namespace cBankWebApi.Controllers
 {
     public class PaymentIntermediateController : ApiController
     {
+        private readonly ITransactionSystem _transactionSystem;
         private readonly IMerchantNotifier _merchantNotifier;
 
-        public PaymentIntermediateController(IMerchantNotifier merchantNotifier)
+        public PaymentIntermediateController(
+            ITransactionSystem transactionSystem, 
+            IMerchantNotifier merchantNotifier)
         {
+            _transactionSystem = transactionSystem;
             _merchantNotifier = merchantNotifier;
         }
         public void Post([FromBody]TransactionAuth transactionAuth)
         {
-            TransactionCollection.Instance.AuthTransaction(transactionAuth);
+            _transactionSystem.AuthTransaction(transactionAuth);
             _merchantNotifier.NotifyMerchant(new MerchantNotificationMessage());
         }
     }
