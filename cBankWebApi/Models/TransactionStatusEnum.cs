@@ -5,7 +5,7 @@ using System.Web;
 
 namespace cBankWebApi.Models
 {
-    public enum TransactionStatus
+    public enum TransactionStatusEnum
     {
         AuthWaiting,
         AuthReady

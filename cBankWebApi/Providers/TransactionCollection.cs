@@ -23,25 +23,32 @@ namespace cBankWebApi.Providers
             }
         }
 
-        private static List<TransactionInfo> transaction;
+        private static List<TransactionData> transactions;
 
         public string RegisterTransaction(Product product)
         {
             var transactionId = Guid.NewGuid().ToString();
-            transaction.Add(new TransactionInfo
+            transactions.Add(new TransactionData
             {
                 ProductToBuy = product,
-                TransactionChecgTime = DateTime.Now,
+                TransactionChangeTime = DateTime.Now,
                 TransactionGuid = transactionId,
-                TrasactionStatus = TransactionStatus.AuthWaiting
+                TransactionStatus = TransactionStatusEnum.AuthWaiting,
+                AuthCode = "1234",
             });
 
             return transactionId;
         }
 
+        public void AuthTransaction(string transactionId, string authCode)
+        {
+            var transaction = transactions.FirstOrDefault(s => s.TransactionGuid == transactionId && s.TransactionStatus == TransactionStatusEnum.AuthWaiting);
+            transaction.Authorize(authCode);
+        }
+
         private static void InitData()
         {
-            transaction = new List<TransactionInfo>();
+            transactions = new List<TransactionData>();
         }
 
         private TransactionCollection()

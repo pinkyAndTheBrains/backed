@@ -1,4 +1,6 @@
-﻿using System;
+﻿using cBankWebApi.Models;
+using cBankWebApi.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,9 +11,9 @@ namespace cBankWebApi.Controllers
 {
     public class PaymentIntermediateController : ApiController
     {
-        public void Post([FromBody]string transactionId, [FromBody]string authCode)
+        public void Post([FromBody]TransactionAuth transactionAuth)
         {
-            
+            TransactionCollection.Instance.AuthTransaction(transactionAuth.TransactionId, transactionAuth.AuthCode);
         }
         
     }
