@@ -281,10 +281,8 @@
     <Compile Include="Controllers\SuggestionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MerchantController.cs" />
-    <Compile Include="Controllers\MobileAppController.cs" />
     <Compile Include="Controllers\PaymentFinalController.cs" />
-    <Compile Include="Controllers\PaymentIntermediateController.cs" />
-    <Compile Include="Controllers\PreparePaymentController.cs" />
+    <Compile Include="Controllers\PaymentPrepareController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

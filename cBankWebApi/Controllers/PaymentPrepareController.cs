@@ -6,12 +6,12 @@ using cBankWebApi.Providers.Interfaces;
 
 namespace cBankWebApi.Controllers
 {
-    public class PreparePaymentController : ApiController
+    public class PaymentPrepareController : ApiController
     {
         private readonly ITransactionSystem _transactionSystem;
         private readonly IProductCatalog _productCatalog;
 
-        public PreparePaymentController(ITransactionSystem transactionSystem, IProductCatalog productCatalog)
+        public PaymentPrepareController(ITransactionSystem transactionSystem, IProductCatalog productCatalog)
         {
             _transactionSystem = transactionSystem;
             _productCatalog = productCatalog;

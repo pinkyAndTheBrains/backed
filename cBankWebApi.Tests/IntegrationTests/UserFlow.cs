@@ -35,9 +35,9 @@ namespace cBankWebApi.Tests.IntegrationTests
             var transactionSystemMoq = new Mock<ITransactionSystem>();
             var definedTransactionId = Guid.NewGuid().ToString();
             transactionSystemMoq.Setup(x => x.RegisterTransaction(It.IsAny<Product>())).Returns(definedTransactionId);
-            var prepareController = new PreparePaymentController(transactionSystemMoq.Object, productCatalogMoq.Object);
+            var prepareController = new PaymentPrepareController(transactionSystemMoq.Object, productCatalogMoq.Object);
             var merchantNotifierMoq = new Mock<IMerchantNotifier>();
-            var intermediateController = new PaymentIntermediateController(transactionSystemMoq.Object,
+            var intermediateController = new PaymentFinalController(transactionSystemMoq.Object,
                 merchantNotifierMoq.Object);
 
             var beaconId = "beacon_Id";
