@@ -10,11 +10,11 @@ using cBankWebApi.Providers.Interfaces;
 
 namespace cBankWebApi.Controllers
 {
-    public class GetSuggestionsController : ApiController
+    public class SuggestionsController : ApiController
     {
         private readonly IProductCatalog _catalog;
 
-        public GetSuggestionsController(IProductCatalog catalog)
+        public SuggestionsController(IProductCatalog catalog)
         {
             _catalog = catalog;
         }
