@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
@@ -10,6 +12,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using cBankWebApi.Providers;
 using cBankWebApi.Models;
+using Thinktecture.IdentityModel.Owin;
 
 namespace cBankWebApi
 {
@@ -44,7 +47,10 @@ namespace cBankWebApi
             };
 
             // Enable the application to use bearer tokens to authenticate users
-            app.UseOAuthBearerTokens(OAuthOptions);
+            //app.UseOAuthBearerTokens(OAuthOptions);
+
+            app.UseBasicAuthentication(new BasicAuthenticationOptions("SecureApi",
+                async (username, password) => await Authenticate(username, password)));
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
@@ -64,6 +70,20 @@ namespace cBankWebApi
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+        }
+
+        private async Task<IEnumerable<Claim>> Authenticate(string username, string password)
+        {
+            // authenticate user
+            if (username == password)
+            {
+                return new List<Claim>
+                {
+                    new Claim("name", username)
+                };
+            }
+
+            return null;
         }
     }
 }

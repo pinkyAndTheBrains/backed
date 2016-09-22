@@ -26,10 +26,18 @@ namespace cBankWebApi.Providers
             return transactionId;
         }
 
-        public void AuthTransaction(TransactionAuth transactionAuthData)
+        public Product AuthTransaction(TransactionAuth transactionAuthData)
         {
             var transaction = TransactionStorage.FirstOrDefault(s => s.TransactionGuid == transactionAuthData.TransactionId && s.TransactionStatus == TransactionStatusEnum.AuthWaiting);
+
+            if (transaction == null)
+            {
+                throw new ArgumentException("No transaction");
+            }
+
+            var product = transaction.ProductToBuy;
             transaction.Authorize(transactionAuthData.AuthCode);
+            return product;
         }
 
         private static readonly List<TransactionData> TransactionStorage = new List<TransactionData>();

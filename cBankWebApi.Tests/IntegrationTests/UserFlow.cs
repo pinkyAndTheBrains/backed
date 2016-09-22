@@ -35,6 +35,7 @@ namespace cBankWebApi.Tests.IntegrationTests
             var transactionSystemMoq = new Mock<ITransactionSystem>();
             var definedTransactionId = Guid.NewGuid().ToString();
             transactionSystemMoq.Setup(x => x.RegisterTransaction(It.IsAny<Product>())).Returns(definedTransactionId);
+            transactionSystemMoq.Setup(x => x.AuthTransaction(It.IsAny<TransactionAuth>())).Returns(products.First());
             var prepareController = new PaymentPrepareController(transactionSystemMoq.Object, productCatalogMoq.Object);
             var merchantNotifierMoq = new Mock<IMerchantNotifier>();
             var intermediateController = new PaymentFinalController(transactionSystemMoq.Object,
