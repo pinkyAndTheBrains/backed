@@ -23,12 +23,12 @@ namespace cBankWebApi.Tests.IntegrationTests
             var productCatalogMoq = new Mock<IProductCatalog>();
             var products = new List<Product>()
             {
-                new Product() {Id = 1, Name = "Name1", Price = 11.11m},
-                new Product() {Id = 2, Name = "Name2", Price = 22.22m},
+                new Product() {ProductId = "1", Name = "Name1", Price = 11.11m},
+                new Product() {ProductId = "2", Name = "Name2", Price = 22.22m},
             };
             productCatalogMoq.Setup(x => x.GetProductsForCompany(It.IsAny<string>())).Returns(
                 products);
-            productCatalogMoq.Setup(x => x.GetProduct(It.IsAny<string>(), It.Is<int>(s => s == 1))).Returns(products[0]);
+            productCatalogMoq.Setup(x => x.GetProduct(It.IsAny<string>(), It.Is<string>(s => s == "1"))).Returns(products[0]);
 
             var suggestionController = new SuggestionsController(productCatalogMoq.Object);
 
@@ -44,7 +44,7 @@ namespace cBankWebApi.Tests.IntegrationTests
             
             //act
             var list = suggestionController.Get(beaconId);
-            var transactionId = prepareController.Get(list.First().Id);
+            var transactionId = prepareController.Get(list.First().ProductId);
             intermediateController.Post(new TransactionAuth() {TransactionId = transactionId, AuthCode = "1234"});
             
             //assert
@@ -54,7 +54,7 @@ namespace cBankWebApi.Tests.IntegrationTests
                 Times.Once);
 
             transactionSystemMoq.Verify(
-                x => x.RegisterTransaction(It.Is<Product>(product => product.Id == 1 && product.Price == 11.11m)),
+                x => x.RegisterTransaction(It.Is<Product>(product => product.ProductId == "1" && product.Price == 11.11m)),
                 Times.Once);
             transactionSystemMoq.Verify(
                 x =>

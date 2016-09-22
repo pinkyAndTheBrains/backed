@@ -14,9 +14,9 @@ namespace cBankWebApi.Providers
             return CompanyProducts["1"];
         }
 
-        public Product GetProduct(string beaconId, int productId)
+        public Product GetProduct(string beaconId, string productId)
         {
-            return GetProductsForCompany("1").FirstOrDefault(s => s.Id == productId);
+            return GetProductsForCompany("1").FirstOrDefault(s => s.ProductId == productId);
         }
 
         public static void InitData(ProductCatalog productCatalog)
@@ -28,21 +28,21 @@ namespace cBankWebApi.Providers
             products.Add(
                 new Product()
                 {
-                    Id = 1,
+                    ProductId = "1",
                     Name = "Latte",
                     Price = 6m
                 });
             products.Add(
                 new Product()
                 {
-                    Id = 2,
+                    ProductId = "2",
                     Name = "Espresso",
                     Price = 3.6m
                 });
             products.Add(
                 new Product()
                 {
-                    Id = 3,
+                    ProductId = "3",
                     Name = "Cappucino",
                     Price = 4.7m
                 });
