@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using cBankWebApi.Push;
+using Microsoft.AspNet.SignalR;
 
 namespace cBankWebApi.Controllers
 {
@@ -29,7 +31,16 @@ namespace cBankWebApi.Controllers
         // PUT api/values/5
         public void Put(int id, [FromBody]string value)
         {
+            SendNotificationToMerchant();
         }
+
+        private static void SendNotificationToMerchant()
+        {
+            GlobalHost
+                .ConnectionManager
+                .GetHubContext<MerchantNotificationHub>().Clients.All.addContosoChatMessageToPage("aaa", "something new!!");
+        }
+
 
         // DELETE api/values/5
         public void Delete(int id)

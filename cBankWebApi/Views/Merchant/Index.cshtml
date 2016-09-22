@@ -1,0 +1,46 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Offers requested by clients";
+}
+
+@section scripts{
+    <script src="/signalr/hubs/" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(function() {
+
+
+            /*var hub = $.connection.merchantNotificationHub;
+
+            $.connection.hub.start()
+                .done(function() { console.log('Now connected, connection ID=' + $.connection.hub.id); })
+                .fail(function() { console.log('Could not Connect!'); });
+
+            hub.client.globalNotification = function (notification) {
+                alert('aaaa' + notification);
+            };  */
+
+            var contosoChatHubProxy = $.connection.merchantNotificationHub;
+            contosoChatHubProxy.client.addContosoChatMessageToPage = function (name, message) {
+                alert('message:' + message);
+            };
+            $.connection.hub.start().done(function () {
+                // Wire up Send button to call NewContosoChatMessage on the server.
+                $('#newContosoChatMessage').click(function () {
+                    contosoChatHubProxy.server.newContosoChatMessage("AAAAA", $('#message').val());
+                    $('#message').val('').focus();
+                });
+            });
+        });
+    </script>
+}
+
+<h2>Offers requested by clients</h2>
+
+
+<ul id="offersList">
+    <li>Temp offer</li>
+</ul>
+<input type="text" id="message"/>
+<button id="newContosoChatMessage">SEND!QQAQQQ</button>
