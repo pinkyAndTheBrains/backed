@@ -7,8 +7,7 @@ using System.Web.Http;
 
 namespace cBankWebApi.Controllers
 {
-    [Authorize]
-    public class ValuesController : ApiController
+    public class MobileAppController : ApiController
     {
         // GET api/values
         public IEnumerable<string> Get()
