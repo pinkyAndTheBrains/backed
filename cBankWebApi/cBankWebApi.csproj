@@ -217,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DependencyInjectionStartup.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -273,7 +274,9 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\TransactionCollection.cs" />
     <Compile Include="Providers\ProductCatalog.cs" />
+    <Compile Include="Push\IMerchantNotifier.cs" />
     <Compile Include="Push\MerchantNotificationHub.cs" />
+    <Compile Include="Push\MerchantNotifier.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

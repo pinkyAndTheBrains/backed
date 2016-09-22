@@ -36,9 +36,7 @@ namespace cBankWebApi.Controllers
 
         private static void SendNotificationToMerchant()
         {
-            GlobalHost
-                .ConnectionManager
-                .GetHubContext<MerchantNotificationHub>().Clients.All.addContosoChatMessageToPage("aaa", "something new!!");
+           
         }
 
 
