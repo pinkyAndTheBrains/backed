@@ -1,18 +1,15 @@
-﻿using cBankWebApi.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using cBankWebApi.Models;
+using cBankWebApi.Providers.Interfaces;
 
 namespace cBankWebApi.Providers
 {
-    public class ProductCatalog : IProductCatalog
+    public class ProductCatalog: IProductCatalog
     {
-       
         private Dictionary<string, List<Product>> CompanyProducts { get; set; }
 
-
-        public List<Product> GetProductsForCompany(string beaconId)
+        public List<Product> GetProductsForCompany(string beacon)
         {
             return CompanyProducts["1"];
         }
@@ -33,14 +30,21 @@ namespace cBankWebApi.Providers
                 {
                     Id = 1,
                     Name = "Latte",
-                    Price = 8
+                    Price = 6m
                 });
             products.Add(
                 new Product()
                 {
                     Id = 2,
-                    Name = "Esspresso",
-                    Price = 6
+                    Name = "Espresso",
+                    Price = 3.6m
+                });
+            products.Add(
+                new Product()
+                {
+                    Id = 3,
+                    Name = "Cappucino",
+                    Price = 4.7m
                 });
             productCatalog.CompanyProducts.Add("1", products);
         }
