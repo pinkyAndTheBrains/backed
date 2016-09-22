@@ -48,10 +48,5 @@ namespace cBankWebApi.Providers
                 });
             productCatalog.CompanyProducts.Add("1", products);
         }
-
-        public ProductCatalog()
-        {
-
-        }
     }
 }
