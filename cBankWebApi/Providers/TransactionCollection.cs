@@ -1,4 +1,5 @@
 ﻿using cBankWebApi.Models;
+using cBankWebApi.Providers.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,24 +7,9 @@ using System.Web;
 
 namespace cBankWebApi.Providers
 {
-    public class TransactionCollection
+    public class TransactionCollection : ITransactionSystem
     {
         private static TransactionCollection _productCatalog;
-
-        public static TransactionCollection Instance
-        {
-            get
-            {
-                if (_productCatalog == null)
-                {
-                    _productCatalog = new TransactionCollection();
-                    InitData();
-                }
-                return _productCatalog;
-            }
-        }
-
-        private static List<TransactionData> transactions;
 
         public string RegisterTransaction(Product product)
         {
@@ -40,11 +26,26 @@ namespace cBankWebApi.Providers
             return transactionId;
         }
 
-        public void AuthTransaction(string transactionId, string authCode)
+        public void AuthTransaction(TransactionAuth transactionAuthData)
         {
-            var transaction = transactions.FirstOrDefault(s => s.TransactionGuid == transactionId && s.TransactionStatus == TransactionStatusEnum.AuthWaiting);
-            transaction.Authorize(authCode);
+            var transaction = transactions.FirstOrDefault(s => s.TransactionGuid == transactionAuthData.TransactionId && s.TransactionStatus == TransactionStatusEnum.AuthWaiting);
+            transaction.Authorize(transactionAuthData.AuthCode);
         }
+
+        public static TransactionCollection Instance
+        {
+            get
+            {
+                if (_productCatalog == null)
+                {
+                    _productCatalog = new TransactionCollection();
+                    InitData();
+                }
+                return _productCatalog;
+            }
+        }
+
+        private static List<TransactionData> transactions;
 
         private static void InitData()
         {

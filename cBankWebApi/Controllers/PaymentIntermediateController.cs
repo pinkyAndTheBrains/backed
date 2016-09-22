@@ -20,9 +20,8 @@ namespace cBankWebApi.Controllers
         }
         public void Post([FromBody]TransactionAuth transactionAuth)
         {
-            TransactionCollection.Instance.AuthTransaction(transactionAuth.TransactionId, transactionAuth.AuthCode);
+            TransactionCollection.Instance.AuthTransaction(transactionAuth);
             _merchantNotifier.NotifyMerchant(new MerchantNotificationMessage());
         }
-        
     }
 }
