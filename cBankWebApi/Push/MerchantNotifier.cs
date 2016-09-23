@@ -15,12 +15,14 @@ namespace cBankWebApi.Push
 
             var selectedClients = merchantNotificationHub.Clients.All;
 
-            selectedClients.addContosoChatMessageToPage("aaa", message.ProductId);
+            selectedClients.addContosoChatMessageToPage(message.TransactionId, message.ProductId);
         }
     }
 
     public class MerchantNotificationMessage
     {
         public string ProductId { get; set; }
+
+        public string TransactionId { get; set; }
     }
 }

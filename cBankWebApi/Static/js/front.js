@@ -33,9 +33,9 @@ $( document ).ready(function() {
 
     if ($.connection != undefined) {
         var contosoChatHubProxy = $.connection.merchantNotificationHub;
-        contosoChatHubProxy.client.addContosoChatMessageToPage = function(name, message) {
-            console.log("new message" + message);
-            add_coffee(coffee_data[message]);
+        contosoChatHubProxy.client.addContosoChatMessageToPage = function(transactionId, productId) {
+            console.log("new msg= {productId: " + productId+", transactionId: "+transactionId+"}");
+            add_coffee(coffee_data[productId]);
         };
         $.connection.hub.start()
             .done(function() {

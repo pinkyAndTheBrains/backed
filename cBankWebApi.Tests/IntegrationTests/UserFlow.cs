@@ -63,7 +63,11 @@ namespace cBankWebApi.Tests.IntegrationTests
                         It.Is<TransactionAuth>(
                             auth => auth.TransactionId == definedTransactionId && auth.AuthCode == "1234")), Times.Once);
 
-            merchantNotifierMoq.Verify(x => x.NotifyMerchant(It.IsAny<MerchantNotificationMessage>()), Times.Once);
+            merchantNotifierMoq.Verify(
+                x =>
+                    x.NotifyMerchant(
+                        It.Is<MerchantNotificationMessage>(
+                            msg => msg.TransactionId == definedTransactionId && msg.ProductId == "1")), Times.Once);
         }
     }
 }
