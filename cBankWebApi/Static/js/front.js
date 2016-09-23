@@ -7,9 +7,10 @@ $( document ).ready(function() {
     });
 
     var coffee_data = [
-        {'price': '&#8364;6.00,-', 'coffee_name': 'double espresso', 'image': 'img/icon_espresso.png' },
-        {'price': '&#8364;6.00,-', 'coffee_name': 'cappucino', 'image': 'img/icon_cappucino.png'},
-        {'price': '&#8364;6.00,-', 'coffee_name': 'latte', 'image': 'img/icon_latte.png'}
+        { 'temp object': 'do not remove :)' },
+        { 'price': '&#8364;6.00,-', 'coffee_name': 'large latte', 'image': 'img/icon_latte.png' },
+        { 'price': '&#8364;6.00,-', 'coffee_name': 'large espresso', 'image': 'img/icon_espresso.png' },
+        { 'price': '&#8364;6.00,-', 'coffee_name': 'large cappucino', 'image': 'img/icon_cappucino.png' }
     ];
     
     function add_coffee(coffee) {
