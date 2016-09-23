@@ -390,6 +390,7 @@
     <Content Include="Static\img\icon_latte.png" />
     <Content Include="Static\img\logo.svg" />
     <Content Include="Static\img\Starbucks-Logo.jpg" />
+    <Content Include="Static\img\yass.png" />
     <Content Include="Static\index.html" />
     <Content Include="Static\js\front.js" />
     <Content Include="Web.config" />
