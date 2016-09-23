@@ -5,8 +5,8 @@ namespace cBankWebApi.Providers.Interfaces
 {
     public interface IProductCatalog
     {
-       
         List<Product> GetProductsForCompany(string beaconId);
-        Product GetProduct(string beaconId, int productId);
+
+        Product GetProduct(string beaconId, string productId);
     }
 }

@@ -7,6 +7,20 @@ namespace cBankWebApi.Models
 {
     public class TransactionData
     {
+        public TransactionData()
+            : this(null)
+        {
+        }
+
+        public TransactionData(Product product)
+        {
+            ProductToBuy = product;
+            TransactionChangeTime = DateTime.Now;
+            TransactionStatus = TransactionStatusEnum.AuthWaiting;
+            AuthCode = "1234";
+            TransactionGuid = Guid.NewGuid().ToString();
+        }
+
         public string TransactionGuid { get; set; }
         public Product ProductToBuy { get; set; }
         public TransactionStatusEnum TransactionStatus { get; set; }
