@@ -17,7 +17,7 @@ namespace cBankWebApi.Controllers
             _transactionSystem = transactionSystem;
             _productCatalog = productCatalog;
         }
-        public string Get([FromUri]int productId)
+        public string Get([FromUri]string productId)
         {
             var product = _productCatalog.GetProduct("1", productId);
             //.GetProductsForCompany("1").FirstOrDefault(s=>s.Id == ProductId);

@@ -21,6 +21,6 @@ namespace cBankWebApi.Push
 
     public class MerchantNotificationMessage
     {
-        public int ProductId { get; set; }
+        public string ProductId { get; set; }
     }
 }

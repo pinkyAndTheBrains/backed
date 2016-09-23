@@ -301,8 +301,12 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\Interfaces\ITransactionSystem.cs" />
     <Compile Include="Providers\Interfaces\IProductCatalog.cs" />
+    <Compile Include="Providers\PostDataResponse.cs" />
+    <Compile Include="Providers\TokenReponse.cs" />
     <Compile Include="Providers\TransactionCollection.cs" />
     <Compile Include="Providers\ProductCatalog.cs" />
+    <Compile Include="Providers\Yaas\YaasPersistentRepo.cs" />
+    <Compile Include="Providers\Yaas\YaasTransactionCollection.cs" />
     <Compile Include="Push\IMerchantNotifier.cs" />
     <Compile Include="Push\MerchantNotificationHub.cs" />
     <Compile Include="Push\MerchantNotifier.cs" />

@@ -5,6 +5,7 @@ using cBankWebApi.Providers.Interfaces;
 using cBankWebApi.Push;
 using Microsoft.Practices.Unity;
 using Unity.Mvc5;
+using cBankWebApi.Providers.Yaas;
 
 namespace cBankWebApi
 {
@@ -20,7 +21,8 @@ namespace cBankWebApi
             ProductCatalog.InitData(productCatalog);
             container.RegisterInstance<IProductCatalog>(productCatalog);
 
-            var transactionSystem = new TransactionCollection();
+            //var transactionSystem = new TransactionCollection();
+            var transactionSystem = new YaasTransactionCollection();
             container.RegisterInstance<ITransactionSystem>(transactionSystem);
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

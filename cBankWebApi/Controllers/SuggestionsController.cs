@@ -21,6 +21,8 @@ namespace cBankWebApi.Controllers
         }
         public List<Product> Get([FromUri]string beaconId)
         {
+            //var repo = new YaasPersistentRepo();
+            //repo.GetData();
             return _catalog.GetProductsForCompany(beaconId);
         }
     }
