@@ -19,14 +19,17 @@ namespace cBankWebApi.Providers.Yaas
             _defaultTable = "transactions";
         }
 
-        public void AuthTransaction(TransactionAuth transactionAuthData)
+        public Product AuthTransaction(TransactionAuth transactionAuthData)
         {
             var qId = HttpUtility.UrlEncode($"id:{transactionAuthData.TransactionId}");            
             var transactionData = _repo.GetData<List<TransactionData>>(_defaultTable, $"?q={qId}").FirstOrDefault();
+            var product = transactionData.ProductToBuy;
             transactionData.Authorize(transactionAuthData.AuthCode);
 
             var data = JsonConvert.SerializeObject(transactionData);
             _repo.PutData(_defaultTable, data);
+
+            return product;
         }
 
         public string RegisterTransaction(Product product)

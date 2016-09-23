@@ -107,13 +107,6 @@ namespace cBankWebApi.Providers
             return postDataResponse;
         }
 
-        public void GetData()
-        {
-            var id = "57e44653b8fd3f001dd65af6";
-            var qId = HttpUtility.UrlEncode($"id:{id}");
-            GetData<List<Product>>("products", $"?q={qId}");
-        }
-
         public YaasPersistentRepo()
         {
             _tokenUri = new Uri("https://api.yaas.io/hybris/oauth2/v1/token");
