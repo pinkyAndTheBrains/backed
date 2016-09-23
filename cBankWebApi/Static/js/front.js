@@ -15,6 +15,7 @@ $( document ).ready(function() {
     serving_coffee();
 
     var coffee_data = [
+        {'dont':'remove'},
         {'price': '&#8364;6.00,-', 'coffee_name': 'double espresso', 'image': 'img/icon_espresso.png' },
         {'price': '&#8364;6.00,-', 'coffee_name': 'cappucino', 'image': 'img/icon_cappucino.png'},
         {'price': '&#8364;6.00,-', 'coffee_name': 'latte', 'image': 'img/icon_latte.png'}
