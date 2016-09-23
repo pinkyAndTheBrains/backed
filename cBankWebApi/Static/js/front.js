@@ -6,11 +6,18 @@ $( document ).ready(function() {
         $(this).parent().parent().remove();
     });
 
+
+    function serving_coffee() {
+        $('tr').on('click', '.serve-button', function () {
+            $(this).parent().parent().fadeOut();
+        });
+    }
+    serving_coffee();
+
     var coffee_data = [
-        { 'temp object': 'do not remove :)' },
-        { 'price': '&#8364;6.00,-', 'coffee_name': 'large latte', 'image': 'img/icon_latte.png' },
-        { 'price': '&#8364;6.00,-', 'coffee_name': 'large espresso', 'image': 'img/icon_espresso.png' },
-        { 'price': '&#8364;6.00,-', 'coffee_name': 'large cappucino', 'image': 'img/icon_cappucino.png' }
+        {'price': '&#8364;6.00,-', 'coffee_name': 'double espresso', 'image': 'img/icon_espresso.png' },
+        {'price': '&#8364;6.00,-', 'coffee_name': 'cappucino', 'image': 'img/icon_cappucino.png'},
+        {'price': '&#8364;6.00,-', 'coffee_name': 'latte', 'image': 'img/icon_latte.png'}
     ];
     
     function add_coffee(coffee) {
@@ -24,7 +31,9 @@ $( document ).ready(function() {
             '<i class="material-icons right">thumb_up</i>'+
             '</button>'+
             '</td>'+
-            '</tr>')
+            '</tr>');
+            $('#coffee-list > tr').first().hide().show(3000);
+            serving_coffee();
     }
     
     $('#add-data').click(function () {
@@ -33,9 +42,9 @@ $( document ).ready(function() {
 
     if ($.connection != undefined) {
         var contosoChatHubProxy = $.connection.merchantNotificationHub;
-        contosoChatHubProxy.client.addContosoChatMessageToPage = function(transactionId, productId) {
-            console.log("new msg= {productId: " + productId+", transactionId: "+transactionId+"}");
-            add_coffee(coffee_data[productId]);
+        contosoChatHubProxy.client.addContosoChatMessageToPage = function(name, message) {
+            console.log("new message" + message);
+            add_coffee(coffee_data[message]);
         };
         $.connection.hub.start()
             .done(function() {
