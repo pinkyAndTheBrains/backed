@@ -175,7 +175,6 @@ namespace cBankWebApi
                     })
                 .EnableSwaggerUi(c =>
                     {
-                        c.InjectJavaScript(thisAssembly, "cBankWebApi.CustomContent.basic-auth.js");
                         // Use the "InjectStylesheet" option to enrich the UI with one or more additional CSS stylesheets.
                         // The file must be included in your project as an "Embedded Resource", and then the resource's
                         // "Logical Name" is passed to the method as shown below.

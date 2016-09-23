@@ -10,6 +10,7 @@ using cBankWebApi.Providers.Interfaces;
 
 namespace cBankWebApi.Controllers
 {
+    //[Authorize]
     public class SuggestionsController : ApiController
     {
         private readonly IProductCatalog _catalog;

@@ -6,6 +6,7 @@ using cBankWebApi.Providers.Interfaces;
 
 namespace cBankWebApi.Controllers
 {
+    //[Authorize]
     public class PaymentPrepareController : ApiController
     {
         private readonly ITransactionSystem _transactionSystem;

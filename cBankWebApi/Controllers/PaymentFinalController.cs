@@ -11,6 +11,7 @@ using cBankWebApi.Push;
 
 namespace cBankWebApi.Controllers
 {
+    //[Authorize]
     public class PaymentFinalController : ApiController
     {
         private readonly ITransactionSystem _transactionSystem;
