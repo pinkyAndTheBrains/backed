@@ -384,6 +384,7 @@
     <Content Include="Static\bower_components\materialize\dist\css\materialize.min.css" />
     <Content Include="Static\bower_components\materialize\dist\js\materialize.js" />
     <Content Include="Static\bower_components\materialize\dist\js\materialize.min.js" />
+    <Content Include="Static\img\coffee_figo.png" />
     <Content Include="Static\img\icon_cappucino.png" />
     <Content Include="Static\img\icon_espresso.png" />
     <Content Include="Static\img\icon_latte.png" />
