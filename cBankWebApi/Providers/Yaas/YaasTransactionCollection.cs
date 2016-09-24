@@ -10,33 +10,29 @@ namespace cBankWebApi.Providers.Yaas
 {
     public class YaasTransactionCollection : ITransactionSystem
     {
-        private readonly YaasPersistentRepo _repo;
+        private readonly YaasPersistentRepo<TransactionData> _transactionRepo;
         private readonly string _defaultTable;
 
         public YaasTransactionCollection()
         {
-            _repo = new YaasPersistentRepo();
+            _transactionRepo = new YaasPersistentRepo<TransactionData>();
             _defaultTable = "transactions";
         }
 
         public Product AuthTransaction(TransactionAuth transactionAuthData)
         {
-            var qId = HttpUtility.UrlEncode($"id:{transactionAuthData.TransactionId}");            
-            var transactionData = _repo.GetData<List<TransactionData>>(_defaultTable, $"?q={qId}").FirstOrDefault();
+            var transactionData = _transactionRepo.Get(transactionAuthData.TransactionId);
             var product = transactionData.ProductToBuy;
             transactionData.Authorize(transactionAuthData.AuthCode);
 
-            var data = JsonConvert.SerializeObject(transactionData);
-            _repo.PutData(_defaultTable, data);
-
+            _transactionRepo.Update(transactionData);
             return product;
         }
 
         public string RegisterTransaction(Product product)
         {
-            var transactionInfo = new TransactionData(product);
-            var data = JsonConvert.SerializeObject(transactionInfo);
-            var response = _repo.PostData<PostDataResponse>(_defaultTable, data);
+            var transactionData = new TransactionData(product);
+            var response = _transactionRepo.Add<PostDataResponse>(transactionData);
 
             return response.id;
         }
