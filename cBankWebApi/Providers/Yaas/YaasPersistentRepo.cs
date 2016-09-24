@@ -16,8 +16,9 @@ namespace cBankWebApi.Providers
         private readonly Uri _tokenUri;
         private readonly Uri _dataUri;
         private readonly string _repositoryName;
+        private string _authToken;
 
-        private string GetAuthToken()
+        private string GenerateNewToken()
         {
             NameValueCollection postData = new NameValueCollection();
             postData.Add("grant_type", "client_credentials");
@@ -36,14 +37,49 @@ namespace cBankWebApi.Providers
             return tokenResponce?.access_token;
         }
 
-        private WebRequest GetWebRequest(string url, string authToken, string method)
+        private WebRequest GetWebRequest(string url, string method)
         {
             var wr = WebRequest.Create(url);
             wr.Method = method;
-            wr.Headers["Authorization"] = $"Bearer {authToken}";
             wr.ContentType = "application/json";
-
+            wr.Headers["Authorization"] = $"Bearer {_authToken}";
             return wr;
+        }
+
+        private HttpWebResponse webRequestHandler(Func<WebRequest> webRequestGenerate)
+        {
+            var tryCount = 0;
+            var tryCountMax = 2;
+
+            HttpWebResponse httpWebResponse = default(HttpWebResponse);
+            while (tryCount < tryCountMax)
+            {
+                try
+                {
+                    var wr = webRequestGenerate();
+                    httpWebResponse = (HttpWebResponse)wr.GetResponse();
+                }
+                catch (WebException ex)
+                {
+                    if ((ex.Response as HttpWebResponse).StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        _authToken = GenerateNewToken();
+                        tryCount++;
+                    }
+                    if (tryCount == tryCountMax)
+                    {
+                        throw;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                break;
+            }
+
+            return httpWebResponse;
         }
 
         private string UrlToProcessData()
@@ -63,7 +99,7 @@ namespace cBankWebApi.Providers
             var reqUrl = UrlToProcessData();
             byte[] buf = Encoding.UTF8.GetBytes(stringData);
 
-            var wr = GetWebRequest(reqUrl, GetAuthToken(), "POST");
+            var wr = GetWebRequest(reqUrl, "POST");
             wr.ContentLength = buf.Length;
             wr.GetRequestStream().Write(buf, 0, buf.Length);
             var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
@@ -86,13 +122,19 @@ namespace cBankWebApi.Providers
         private void PutData(T data)
         {
             var stringData = JsonConvert.SerializeObject(data);
-            var reqUrl = UrlToProcessData();
             byte[] buf = Encoding.UTF8.GetBytes(stringData);
 
-            var wr = GetWebRequest(reqUrl, GetAuthToken(), "PUT");
-            wr.ContentLength = buf.Length;
-            wr.GetRequestStream().Write(buf, 0, buf.Length);
-            var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
+            var reqUrl = UrlToProcessData();
+            var wr = GetWebRequest(reqUrl, "PUT");
+            HttpWebResponse HttpWebResponse = default(HttpWebResponse);
+
+            try
+            {
+                SendRequest(wr, buf);
+            } catch(Exception ex)
+            {
+
+            }
 
             var encoding = UTF8Encoding.UTF8;
             using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
@@ -101,16 +143,21 @@ namespace cBankWebApi.Providers
             }
         }
 
+        private HttpWebResponse SendRequest(WebRequest wr, byte[] buf)
+        {
+            wr.ContentLength = buf.Length;
+            wr.GetRequestStream().Write(buf, 0, buf.Length);
+            return (HttpWebResponse)wr.GetResponse();
+        }
+
         private IEnumerable<T> FetchData(string table, string data)
         {
             var reqUrl = UrlToRequestData(data);
-
-            var wr = GetWebRequest(reqUrl, GetAuthToken(), "GET");
-            var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
+            var httpWebResponse = webRequestHandler(() => GetWebRequest(reqUrl, "GET"));
 
             var encoding = UTF8Encoding.UTF8;
             IEnumerable<T> postDataResponse = default(IEnumerable<T>);
-            using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
+            using (var reader = new System.IO.StreamReader(httpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
                 postDataResponse = JsonConvert.DeserializeObject<IEnumerable<T>>(responseText);
@@ -150,6 +197,7 @@ namespace cBankWebApi.Providers
             _tokenUri = new Uri("https://api.yaas.io/hybris/oauth2/v1/token");
             _dataUri = new Uri("https://api.yaas.io/hybris/document/v1/beacons/beacons.ios/data/");
             _repositoryName = typeof(T).Name;
+            _authToken = GenerateNewToken();
         }
     }
 }
