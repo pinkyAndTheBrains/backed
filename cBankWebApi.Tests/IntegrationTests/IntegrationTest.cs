@@ -12,13 +12,12 @@ namespace cBankWebApi.Tests.IntegrationTests
         [TestCase]
         public void GettingProductFromYaasServiceWithoitException()
         {
-            var repo = new YaasPersistentRepo();
-            var id = "57e44653b8fd3f001dd65af6";
-            var qId = HttpUtility.UrlEncode($"id:{id}");
-            var product = repo.GetData<List<Product>>("products", $"?q={qId}");
+            var repo = new YaasPersistentRepo<Product>();
+            var id = "57e61c923dc37c001ddcbc61";
+            var product = repo.Get(id);
 
-            Assert.AreEqual(1, product.Count);
-            Assert.IsNotEmpty(product[0].Name);
+            Assert.IsNotNull(product?.Name);
+            Assert.IsNotEmpty(product?.Name);
         }
     }
 }

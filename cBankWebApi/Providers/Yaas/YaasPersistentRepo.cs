@@ -1,4 +1,5 @@
 ﻿using cBankWebApi.Models;
+using cBankWebApi.Providers.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,9 +11,11 @@ using System.Web;
 
 namespace cBankWebApi.Providers
 {
-    public class YaasPersistentRepo
+    public class YaasPersistentRepo<T> : IRepository<T>
     {
         private readonly Uri _tokenUri;
+        private readonly Uri _dataUri;
+        private readonly string _repositoryName;
 
         private string GetAuthToken()
         {
@@ -43,16 +46,22 @@ namespace cBankWebApi.Providers
             return wr;
         }
 
-        private string GetRequestUrl(string tableName)
+        private string UrlToProcessData()
         {
-            var reqUrl = "https://api.yaas.io/hybris/document/v1/beacons/beacons.ios/data/" + tableName;
+            var reqUrl = _dataUri + _repositoryName;
             return reqUrl;
         }
 
-        public T PostData<T>(string table, string data)
+        private string UrlToRequestData(string data)
         {
-            var reqUrl = GetRequestUrl(table);
-            byte[] buf = Encoding.UTF8.GetBytes(data);
+            return $"{UrlToProcessData()}?{data}";
+        }
+
+        private R PostData<R>(T data)
+        {
+            var stringData = JsonConvert.SerializeObject(data);
+            var reqUrl = UrlToProcessData();
+            byte[] buf = Encoding.UTF8.GetBytes(stringData);
 
             var wr = GetWebRequest(reqUrl, GetAuthToken(), "POST");
             wr.ContentLength = buf.Length;
@@ -60,20 +69,25 @@ namespace cBankWebApi.Providers
             var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
 
             var encoding = UTF8Encoding.UTF8;
-            T postDataResponse = default(T);
+            R postDataResponse = default(R);
             using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
-                postDataResponse = JsonConvert.DeserializeObject<T>(responseText);
+                try
+                {
+                    postDataResponse = JsonConvert.DeserializeObject<R>(responseText);
+                }
+                catch { };
             }
 
             return postDataResponse;
         }
 
-        public void PutData(string table, string data)
+        private void PutData(T data)
         {
-            var reqUrl = GetRequestUrl(table);
-            byte[] buf = Encoding.UTF8.GetBytes(data);
+            var stringData = JsonConvert.SerializeObject(data);
+            var reqUrl = UrlToProcessData();
+            byte[] buf = Encoding.UTF8.GetBytes(stringData);
 
             var wr = GetWebRequest(reqUrl, GetAuthToken(), "PUT");
             wr.ContentLength = buf.Length;
@@ -81,35 +95,61 @@ namespace cBankWebApi.Providers
             var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
 
             var encoding = UTF8Encoding.UTF8;
-            PostDataResponse postDataResponse = null;
             using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
-                postDataResponse = JsonConvert.DeserializeObject<PostDataResponse>(responseText);
             }
         }
 
-        public T GetData<T>(string table, string data)
+        private IEnumerable<T> FetchData(string table, string data)
         {
-            var reqUrl = GetRequestUrl(table + data);
-         
+            var reqUrl = UrlToRequestData(data);
+
             var wr = GetWebRequest(reqUrl, GetAuthToken(), "GET");
             var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
 
             var encoding = UTF8Encoding.UTF8;
-            T postDataResponse = default(T);
+            IEnumerable<T> postDataResponse = default(IEnumerable<T>);
             using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
-                postDataResponse = JsonConvert.DeserializeObject<T>(responseText);
+                postDataResponse = JsonConvert.DeserializeObject<IEnumerable<T>>(responseText);
             }
 
             return postDataResponse;
         }
 
+        public T Get(string id)
+        {
+            var qId = HttpUtility.UrlEncode($"id:{id}");
+            return FetchData(typeof(T).Name, $"?q={qId}").FirstOrDefault();
+        }
+
+        public void Add(T entity)
+        {
+            PostData<object>(entity);
+        }
+
+        public R Add<R>(T entity)
+        {
+            return PostData<R>(entity);
+        }
+
+        public void Update(T entity)
+        {
+            PutData(entity);
+        }
+
+        public void Remove(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public YaasPersistentRepo()
         {
             _tokenUri = new Uri("https://api.yaas.io/hybris/oauth2/v1/token");
+            _dataUri = new Uri("https://api.yaas.io/hybris/document/v1/beacons/beacons.ios/data/");
+            _repositoryName = typeof(T).Name;
         }
     }
 }

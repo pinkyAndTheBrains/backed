@@ -299,6 +299,7 @@
     <Compile Include="Models\TransactionStatusEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\Interfaces\IRepository.cs" />
     <Compile Include="Providers\Interfaces\ITransactionSystem.cs" />
     <Compile Include="Providers\Interfaces\IProductCatalog.cs" />
     <Compile Include="Providers\PostDataResponse.cs" />
