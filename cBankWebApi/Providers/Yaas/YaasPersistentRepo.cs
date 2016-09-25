@@ -37,16 +37,25 @@ namespace cBankWebApi.Providers
             return tokenResponce?.access_token;
         }
 
-        private WebRequest GetWebRequest(string url, string method)
+        private WebRequest GetWebRequest(string url, string method, T content = default(T))
         {
             var wr = WebRequest.Create(url);
             wr.Method = method;
             wr.ContentType = "application/json";
             wr.Headers["Authorization"] = $"Bearer {_authToken}";
+
+            if (content != null)
+            {
+                var stringData = JsonConvert.SerializeObject(content);
+                byte[] buf = Encoding.UTF8.GetBytes(stringData);
+
+                wr.ContentLength = buf.Length;
+                wr.GetRequestStream().Write(buf, 0, buf.Length);
+            }
             return wr;
         }
 
-        private HttpWebResponse webRequestHandler(Func<WebRequest> webRequestGenerate)
+        private HttpWebResponse RequestHandler(Func<WebRequest> webRequestGenerate)
         {
             var tryCount = 0;
             var tryCountMax = 2;
@@ -90,23 +99,17 @@ namespace cBankWebApi.Providers
 
         private string UrlToRequestData(string data)
         {
-            return $"{UrlToProcessData()}?{data}";
+            return $"{UrlToProcessData()}{data}";
         }
 
         private R PostData<R>(T data)
         {
-            var stringData = JsonConvert.SerializeObject(data);
             var reqUrl = UrlToProcessData();
-            byte[] buf = Encoding.UTF8.GetBytes(stringData);
-
-            var wr = GetWebRequest(reqUrl, "POST");
-            wr.ContentLength = buf.Length;
-            wr.GetRequestStream().Write(buf, 0, buf.Length);
-            var HttpWebResponse = (HttpWebResponse)wr.GetResponse();
+            var httpWebResponse = RequestHandler(() => GetWebRequest(reqUrl, "POST", data));
 
             var encoding = UTF8Encoding.UTF8;
             R postDataResponse = default(R);
-            using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
+            using (var reader = new System.IO.StreamReader(httpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
                 try
@@ -121,39 +124,20 @@ namespace cBankWebApi.Providers
 
         private void PutData(T data)
         {
-            var stringData = JsonConvert.SerializeObject(data);
-            byte[] buf = Encoding.UTF8.GetBytes(stringData);
-
             var reqUrl = UrlToProcessData();
-            var wr = GetWebRequest(reqUrl, "PUT");
-            HttpWebResponse HttpWebResponse = default(HttpWebResponse);
-
-            try
-            {
-                SendRequest(wr, buf);
-            } catch(Exception ex)
-            {
-
-            }
+            var httpWebResponse = RequestHandler(() => GetWebRequest(reqUrl, "PUT", data));
 
             var encoding = UTF8Encoding.UTF8;
-            using (var reader = new System.IO.StreamReader(HttpWebResponse.GetResponseStream(), encoding))
+            using (var reader = new System.IO.StreamReader(httpWebResponse.GetResponseStream(), encoding))
             {
                 string responseText = reader.ReadToEnd();
             }
         }
 
-        private HttpWebResponse SendRequest(WebRequest wr, byte[] buf)
-        {
-            wr.ContentLength = buf.Length;
-            wr.GetRequestStream().Write(buf, 0, buf.Length);
-            return (HttpWebResponse)wr.GetResponse();
-        }
-
         private IEnumerable<T> FetchData(string table, string data)
         {
             var reqUrl = UrlToRequestData(data);
-            var httpWebResponse = webRequestHandler(() => GetWebRequest(reqUrl, "GET"));
+            var httpWebResponse = RequestHandler(() => GetWebRequest(reqUrl, "GET"));
 
             var encoding = UTF8Encoding.UTF8;
             IEnumerable<T> postDataResponse = default(IEnumerable<T>);
