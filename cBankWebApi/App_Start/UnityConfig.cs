@@ -20,10 +20,8 @@ namespace cBankWebApi
             var productCatalog = new ProductCatalog();
             ProductCatalog.InitData(productCatalog);
             container.RegisterInstance<IProductCatalog>(productCatalog);
-
-            //var transactionSystem = new TransactionCollection();
-            var transactionSystem = new YaasTransactionCollection();
-            container.RegisterInstance<ITransactionSystem>(transactionSystem);
+            container.RegisterType<IRepositoryReadWrite<Models.TransactionData>, YaasPersistentRepo<Models.TransactionData>>();
+            container.RegisterType<ITransactionSystem, YaasTransactionCollection>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = 

@@ -8,14 +8,14 @@ using Newtonsoft.Json;
 
 namespace cBankWebApi.Providers.Yaas
 {
-    public class YaasTransactionCollection : ITransactionSystem
+    internal class YaasTransactionCollection : ITransactionSystem
     {
-        private readonly YaasPersistentRepo<TransactionData> _transactionRepo;
+        private readonly IRepositoryReadWrite<TransactionData> _transactionRepo;
         private readonly string _defaultTable;
 
-        public YaasTransactionCollection()
+        public YaasTransactionCollection(IRepositoryReadWrite<TransactionData> transactionDataRepo)
         {
-            _transactionRepo = new YaasPersistentRepo<TransactionData>();
+            _transactionRepo = transactionDataRepo;
             _defaultTable = "transactions";
         }
 
